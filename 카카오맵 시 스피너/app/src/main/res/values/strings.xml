@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string  name="btn_name">검색</string>
+    <string  name="text_view">주 소 검 색</string>
+</resources>
