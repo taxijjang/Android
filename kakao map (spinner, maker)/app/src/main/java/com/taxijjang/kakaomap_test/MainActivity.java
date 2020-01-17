@@ -1,13 +1,16 @@
 package com.taxijjang.kakaomap_test;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -51,6 +54,11 @@ public class MainActivity extends AppCompatActivity {
     //선택한 x,y 좌표를 위경도로 변환하여 저장할 변수
     LatXLngY select_locate;
 
+    Data his_Data;
+
+    RecyclerView recyclerView;
+
+    ArrayList<Data> history_array = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +83,9 @@ public class MainActivity extends AppCompatActivity {
         gu_y = new JSONObject();
 
         final String url = "http://www.kma.go.kr/DFSROOT/POINT/DATA/top.json.txt";
+
+        his_Data = new Data();
+        Button his_btn = findViewById(R.id.his_button);
 
         try {
             jTask = new Json_Si_Task();
@@ -106,6 +117,22 @@ public class MainActivity extends AppCompatActivity {
         }catch(Exception ex){
             ex.printStackTrace();
         }
+
+        //히스토리 액티비티로 전환하기 위한 버튼
+        his_btn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(getApplicationContext(),History.class);
+
+                Log.v("히스토리 어레이에 담겼느냐~ " , "size : " + history_array.size());
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("adress",history_array);
+                intent.putExtras(bundle);
+
+                startActivity(intent);
+
+            }
+        });
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,6 +148,11 @@ public class MainActivity extends AppCompatActivity {
                 // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
                 marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
                 mapView.addPOIItem(marker);
+
+                Toast.makeText(MainActivity.this, his_Data.si + "  " + his_Data.gun + " " + his_Data.gu + "\n"
+                        + "위도 : " + his_Data.latx + " 경도 : " + his_Data.laty ,Toast.LENGTH_LONG ).show();
+
+                history_array.add(his_Data);
             }
         });
 
@@ -135,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     JSON_Gun_Task jTask2 = new JSON_Gun_Task();
                     Gun_json = jTask2.execute("http://www.kma.go.kr/DFSROOT/POINT/DATA/mdl."+ si.getString(city)+".json.txt").get();
+                    his_Data.si = city;
                     arrayList2 = new ArrayList<>();
 
                     for(int i= 0 ; i<Gun_json.length(); i++){
@@ -177,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
                 try{
                     JSON_Gu_Task jTask3 = new JSON_Gu_Task();
                     Gu_json = jTask3.execute("http://www.kma.go.kr/DFSROOT/POINT/DATA/leaf."+gun.getString(city)+".json.txt").get();
+                    his_Data.gun = city;
                     sp3 = findViewById(R.id.spinner3);
 
                     arrayList3 = new ArrayList<>();
@@ -219,8 +253,11 @@ public class MainActivity extends AppCompatActivity {
 
                 try{
                     select_locate = convertGRID_GPS(TO_GPS, gu_x.getDouble(city), gu_y.getDouble(city));
-                    Toast.makeText(MainActivity.this, "x : " +  gu_x.getString(city) + " y : " + gu_y.getString(city) +
-                            "Loc X : " + (select_locate.lat) + " Loc Y : " + (select_locate.lng) ,Toast.LENGTH_LONG ).show();
+                    //Toast.makeText(MainActivity.this, "x : " +  gu_x.getString(city) + " y : " + gu_y.getString(city) +
+                            //"Loc X : " + (select_locate.lat) + " Loc Y : " + (select_locate.lng) ,Toast.LENGTH_LONG ).show();
+                    his_Data.gu = city;
+                    his_Data.latx = select_locate.lat;
+                    his_Data.laty = select_locate.lng;
                 }catch(Exception e){
                     e.printStackTrace();
                 }

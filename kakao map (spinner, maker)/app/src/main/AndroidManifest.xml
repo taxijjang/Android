@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.taxijjang.kakaomap_test">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -13,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:ignore="GoogleAppIndexingWarning">
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="1331a2760f8a298542ad79b604582e8d"/>
@@ -25,6 +27,9 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".History">
+
         </activity>
     </application>
 
