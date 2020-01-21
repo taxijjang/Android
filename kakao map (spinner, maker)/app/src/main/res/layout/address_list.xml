@@ -13,11 +13,4 @@
         android:layout_height="wrap_content"
         android:text="시"
         android:textSize="30sp" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="군"
-        android:textSize="23dp" />
 </LinearLayout>

@@ -3,6 +3,7 @@ package com.taxijjang.kakaomap_test;
 import java.io.Serializable;
 @SuppressWarnings("serial")
 public class Data implements Serializable {
+    private static final long serialVersionUID = 100L;
     String si, gun, gu;
     Double latx, laty;
     public Data(){
@@ -58,6 +59,6 @@ public class Data implements Serializable {
     }
 
     public String toString(){
-        return si + " " + gun + " " + gu + "\n " + latx + " " + laty;
+        return "추가된 위치 " + si + " " + gun + " " + gu + "\n " + latx + " " + laty;
     }
 }

@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
 
-    ArrayList<Data> history_array = new ArrayList<>();
+    ArrayList<Data> history_array;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         his_Data = new Data();
         Button his_btn = findViewById(R.id.his_button);
 
+        history_array = new ArrayList<Data>();
         try {
             jTask = new Json_Si_Task();
             json = jTask.execute(url).get();
@@ -122,15 +123,17 @@ public class MainActivity extends AppCompatActivity {
         his_btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                for(Data d : history_array){
+                    System.out.println("전달 되는 배열 " + d.si + " " + d.gun + " "  + d.gu);
+                }
                 Intent intent = new Intent(getApplicationContext(),History.class);
-
-                Log.v("히스토리 어레이에 담겼느냐~ " , "size : " + history_array.size());
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("adress",history_array);
                 intent.putExtras(bundle);
 
                 startActivity(intent);
 
+                history_array.clear();
             }
         });
         btn.setOnClickListener(new View.OnClickListener() {
@@ -152,7 +155,11 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, his_Data.si + "  " + his_Data.gun + " " + his_Data.gu + "\n"
                         + "위도 : " + his_Data.latx + " 경도 : " + his_Data.laty ,Toast.LENGTH_LONG ).show();
 
-                history_array.add(his_Data);
+                Data new_arr = new Data(his_Data);
+                history_array.add(new_arr);
+                for(Data d: history_array){
+                    System.out.println("추가된 위치 " + d.si + " " + d.gun + " " + d.gu);
+                }
             }
         });
 
